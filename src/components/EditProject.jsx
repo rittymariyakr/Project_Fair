@@ -48,7 +48,7 @@ function EditProject({project}) {
                 const result = await editProjectAPI(id,reqBody,reqHeader)
                 console.log(result);
                 if(result.status ===200){
-                    alert('updated successfully')
+                    toast.success('updated successfully')
                     handleClose()
                     setEditProjectResponse(result.data)
                 }
@@ -66,7 +66,7 @@ function EditProject({project}) {
                     const result = await editProjectAPI(id,reqBody,reqHeader)
                     console.log(result);
                     if(result.status ===200){
-                        alert('updated successfully')
+                        toast.success('updated successfully')
                         handleClose()
                         setEditProjectResponse(result.data);
                     }

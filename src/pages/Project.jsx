@@ -40,7 +40,6 @@ function Project() {
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
       setisToken(true)
-
     }
   }, [])
 

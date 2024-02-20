@@ -4,11 +4,12 @@ import { Form } from 'react-bootstrap'
 import { loginAPI, registerAPI } from '../services/allAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { isAuthTokenContext } from '../contexts/ContextShare';
+import { AuthTokenContext } from '../contexts/ContextShare';
+
 
 function Auth({ register }) {
+    const { isAuthorized, setIsAuthorized } = useContext(AuthTokenContext)
 
-    const {isAuthToken, setIsAuthToken} = useContext(isAuthTokenContext)
 
     //create a state to hold the value of user reistration 
     const [userData, setUserData] = useState({
@@ -21,18 +22,18 @@ function Auth({ register }) {
     const navigate = useNavigate()
 
     //function to register
-    const handleRegister = async(e)=>{
+    const handleRegister = async (e) => {
         e.preventDefault()
 
-        const {username,email,password} = userData
+        const { username, email, password } = userData
 
-        if(!username || !email || !password){
+        if (!username || !email || !password) {
             toast.info('please fill the form completely')
         }
-        else{
+        else {
             const result = await registerAPI(userData)
             console.log(result.data);
-            if(result.status ===200){
+            if (result.status === 200) {
                 toast.success(`${result.data.username} is successfully registerd`)
                 //empty the form after regidtrstion
                 setUserData({
@@ -43,7 +44,7 @@ function Auth({ register }) {
                 //naviagte to login page
                 navigate('/login')
             }
-            else{
+            else {
                 toast.error(result.response.data)
             }
         }
@@ -53,27 +54,26 @@ function Auth({ register }) {
     const registerForm = register ? true : false
 
     //function to login
-    const handleLogin =async(e)=>{
+    const handleLogin = async (e) => {
         e.preventDefault()
-        const {email,password} = userData
+        const { email, password } = userData
 
-        if(!email || !password){
+        if (!email || !password) {
             toast.info('Please fill the form completely')
         }
-        else{
+        else {
             //api call
             const result = await loginAPI(userData) //here userData has the body of contents. so give userData as body
             console.log(result);
 
-            if(result.status===200){
+            if (result.status === 200) {
                 //alert
                 toast.success('Login Successfull')
-                setIsAuthToken(true)
+                setIsAuthorized(true)
                 //store in session Storage
                 //JSON.stringify is used to convert json format to string
-                sessionStorage.setItem("existingUser",JSON.stringify(result.data.existingUser))
-                sessionStorage.setItem("token",result.data.token)
-
+                sessionStorage.setItem("existingUser", JSON.stringify(result.data.existingUser))
+                sessionStorage.setItem("token", result.data.token)
 
                 //empty the state (field empty)
                 setUserData({
@@ -81,16 +81,16 @@ function Auth({ register }) {
                     password: ""
                 })
                 //navigate to home
-                
-                setTimeout(()=>{
+
+                setTimeout(() => {
                     navigate('/')
-                },2500)
+                }, 2500)
 
             }
-            else{
+            else {
                 toast.error(result.response.data)
             }
-            
+
         }
     }
 
@@ -145,7 +145,7 @@ function Auth({ register }) {
                     </div>
                 </div>
             </div>
-            <ToastContainer position='top-center' theme='colored' autoClose={2000} />
+            <ToastContainer position='top-center' theme='colored' autoClose={2000} />
         </>
     )
 }
